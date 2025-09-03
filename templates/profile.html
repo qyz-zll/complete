@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block title %}个人资料 - 亲爱的足迹{% endblock %}
+
+{% block content %}
+<div class="flex h-screen overflow-hidden">
+    <!-- 侧边栏 -->
+    <aside class="hidden md:flex flex-col w-64 bg-white shadow-md">
+        <div class="p-6 border-b">
+            <h1 class="text-xl font-bold text-blue-600">亲爱的足迹</h1>
+            <p class="text-gray-500 text-sm">记录美好生活</p>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-1">
+            <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fa fa-home w-5 h-5 mr-3"></i>
+                <span>仪表盘</span>
+            </a>
+            <a href="{% url 'location' %}" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fa fa-map-marker w-5 h-5 mr-3"></i>
+                <span>地址管理</span>
+            </a>
+            <a href="{% url 'checkin' %}" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fa fa-check-square-o w-5 h-5 mr-3"></i>
+                <span>每日打卡</span>
+            </a>
+            <a href="{% url 'activity' %}" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fa fa-calendar w-5 h-5 mr-3"></i>
+                <span>活动记录</span>
+            </a>
+            <a href="{% url 'profile' %}" class="flex items-center px-4 py-3 rounded-lg bg-blue-50 text-blue-600 transition-colors">
+                <i class="fa fa-user w-5 h-5 mr-3"></i>
+                <span>个人资料</span>
+            </a>
+        </nav>
+        
+        <div class="p-4 border-t">
+            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                <i class="fa fa-sign-out w-5 h-5 mr-3"></i>
+                <span>退出登录</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 overflow-y-auto bg-gray-50">
+        <!-- 顶部导航 -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <button class="md:hidden text-gray-600" id="mobileMenuBtn">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+            <h2 class="text-xl font-semibold">个人资料</h2>
+            <div class="flex items-center">
+                <span class="text-gray-600 mr-2">欢迎，{{ user.username }}</span>
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i class="fa fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- 页面内容 -->
+        <div class="p-6">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+                <h3 class="text-lg font-semibold mb-6">个人信息</h3>
+                
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <p class="text-gray-500">用户名</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="font-medium">{{ user.username }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <p class="text-gray-500">邮箱</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="font-medium">{{ user.email|default:"未设置" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <p class="text-gray-500">手机号</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="font-medium">{{ user.profile.phone|default:"未设置" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <p class="text-gray-500">注册时间</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="font-medium">{{ user.date_joined|date:"Y-m-d H:i" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-1">
+                            <p class="text-gray-500">最后登录</p>
+                        </div>
+                        <div class="md:col-span-2">
+                            <p class="font-medium">{{ user.last_login|date:"Y-m-d H:i"|default:"从未登录" }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <a href="{% url 'logout' %}" class="inline-block text-red-600 hover:underline">
+                        <i class="fa fa-sign-out mr-1"></i> 退出登录
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- 移动端菜单 -->
+<div id="mobileMenu" class="fixed inset-0 bg-black/50 z-50 hidden md:hidden">
+    <div class="bg-white h-full w-64 p-4 transform transition-transform">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-bold text-blue-600">菜单</h2>
+            <button id="closeMenuBtn" class="text-gray-500">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav class="space-y-1">
+            <a href="{% url 'dashboard' %}" class="block px-4 py-3 rounded-lg hover:bg-gray-100">
+                <i class="fa fa-home mr-3"></i>仪表盘
+            </a>
+            <a href="{% url 'location' %}" class="block px-4 py-3 rounded-lg hover:bg-gray-100">
+                <i class="fa fa-map-marker mr-3"></i>地址管理
+            </a>
+            <a href="{% url 'checkin' %}" class="block px-4 py-3 rounded-lg hover:bg-gray-100">
+                <i class="fa fa-check-square-o mr-3"></i>每日打卡
+            </a>
+            <a href="{% url 'activity' %}" class="block px-4 py-3 rounded-lg hover:bg-gray-100">
+                <i class="fa fa-calendar mr-3"></i>活动记录
+            </a>
+            <a href="{% url 'profile' %}" class="block px-4 py-3 rounded-lg bg-blue-50 text-blue-600">
+                <i class="fa fa-user mr-3"></i>个人资料
+            </a>
+            <a href="{% url 'logout' %}" class="block px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 mt-6">
+                <i class="fa fa-sign-out mr-3"></i>退出登录
+            </a>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 移动端菜单控制
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuBtn && closeMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.remove('hidden');
+            });
+            
+            closeMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+            });
+            
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

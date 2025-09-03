@@ -1,0 +1,365 @@
+/* 基础样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* 动画定义 */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* 容器样式 */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 背景样式 */
+.login-bg {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+}
+
+.register-bg {
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+}
+
+/* 背景装饰 */
+.auth-container::before,
+.auth-container::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.3;
+    animation: float 8s ease-in-out infinite;
+}
+
+.login-bg::before {
+    width: 600px;
+    height: 600px;
+    background: #5c6bc0;
+    top: -300px;
+    left: -100px;
+}
+
+.login-bg::after {
+    width: 500px;
+    height: 500px;
+    background: #9fa8da;
+    bottom: -250px;
+    right: -100px;
+    animation-delay: 2s;
+}
+
+.register-bg::before {
+    width: 600px;
+    height: 600px;
+    background: #81c784;
+    top: -300px;
+    left: -100px;
+}
+
+.register-bg::after {
+    width: 500px;
+    height: 500px;
+    background: #a5d6a7;
+    bottom: -250px;
+    right: -100px;
+    animation-delay: 2s;
+}
+
+/* 卡片样式 */
+.auth-card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.auth-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* 头部样式 */
+.auth-header {
+    padding: 30px 25px;
+    text-align: center;
+}
+
+.auth-header h2 {
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.auth-header p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+/* 表单样式 */
+.auth-form {
+    padding: 0 25px 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    position: relative;
+    width: 100%;
+}
+
+.form-group label {
+    display: block;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 14px 14px 45px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #64b5f6;
+    box-shadow: 0 0 0 2px rgba(100, 181, 246, 0.2);
+}
+
+/* 图标样式 */
+.form-icon {
+    position: absolute;
+    left: 15px;
+    top: 38px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus + .form-icon {
+    color: #64b5f6;
+}
+
+/* 密码切换按钮 */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 38px;
+    color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.toggle-password:hover {
+    color: #ffffff;
+}
+
+/* 记住我选项 */
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.remember-me input {
+    width: 18px;
+    height: 18px;
+    accent-color: #64b5f6;
+}
+
+.remember-me label {
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+/* 错误提示 */
+.error-message {
+    display: none;
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* 按钮样式 */
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(90deg, #42a5f5 0%, #64b5f6 100%);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.auth-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 165, 245, 0.4);
+}
+
+.auth-btn:active {
+    transform: translateY(0);
+}
+
+/* 底部样式 */
+.auth-footer {
+    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.auth-footer p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.auth-footer a {
+    color: #64b5f6;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.auth-footer a:hover {
+    color: #90caf9;
+    text-decoration: underline;
+}
+
+/* 分隔线 */
+.divider {
+    position: relative;
+    margin: 25px 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-50%);
+}
+
+.divider span {
+    position: relative;
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 0 10px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    z-index: 1;
+}
+
+/* 社交登录 */
+.social-login {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.social-btn {
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.social-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.social-btn.wechat {
+    color: #81c784;
+}
+
+.social-btn.qq {
+    color: #64b5f6;
+}
+
+/* 帮助文本 */
+.help-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* 错误状态 */
+.border-red {
+    border-color: #ff6b6b !important;
+}
+
+.animate-shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* 响应式调整 */
+@media (max-width: 576px) {
+    .auth-card {
+        max-width: 100%;
+        margin: 0 10px;
+    }
+}

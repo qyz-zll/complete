@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}  <!-- 必须加载static标签才能正确引用静态文件 -->
+
+{% block title %}
+    {% if page == 'login' %}登录{% else %}注册{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+    <!-- 关键：在此处引入CSS文件，确保路径正确 -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="auth-page">
+        <div class="auth-card">
+            {% if page == 'login' %}
+                <!-- 登录表单内容 -->
+                <div class="auth-header">
+                    <h1>账号登录</h1>
+                    <p>请输入账号信息登录</p>
+                </div>
+                <form method="POST" action="{% url 'login' %}" class="auth-form" id="loginForm">
+                    {% csrf_token %}
+                    <!-- 登录表单字段 -->
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="请输入用户名">
+                        <i class="fa fa-user form-icon"></i>
+                        <p class="error-message username-error">请输入用户名</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码">
+                        <i class="fa fa-lock form-icon"></i>
+                        <button type="button" id="togglePassword" class="toggle-password">
+                            <i class="fa fa-eye-slash"></i>
+                        </button>
+                        <p class="error-message password-error">请输入密码</p>
+                    </div>
+                    <button type="submit" class="auth-btn">登录</button>
+                    <div class="auth-footer">
+                        <p>还没有账号? <a href="{% url 'register' %}">立即注册</a></p>
+                    </div>
+                </form>
+            {% else %}
+                <!-- 注册表单内容 -->
+                <div class="auth-header">
+                    <h1>创建账号</h1>
+                    <p>填写信息完成注册</p>
+                </div>
+                <form method="POST" action="{% url 'register' %}" class="auth-form" id="registerForm">
+                    {% csrf_token %}
+                    <!-- 注册表单字段 -->
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="3-12位字符">
+                        <i class="fa fa-user form-icon"></i>
+                    </div>
+                    <!-- 其他注册字段... -->
+                    <button type="submit" class="auth-btn">注册</button>
+                    <div class="auth-footer">
+                        <p>已有账号? <a href="{% url 'login' %}">立即登录</a></p>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}

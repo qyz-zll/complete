@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if page == 'dashboard' %}仪表盘{% elif page == 'location' %}地址管理{% elif page == 'checkin' %}每日打卡{% elif page == 'activity' %}活动记录{% endif %} - 亲爱的足迹
+{% endblock %}
+
+{% block content %}
+<div class="flex h-screen overflow-hidden">
+    <!-- 侧边栏 -->
+    <aside class="hidden md:flex flex-col w-64 bg-white shadow-md">
+        <div class="p-6 border-b">
+            <h1 class="text-xl font-bold text-blue-600">亲爱的足迹</h1>
+            <p class="text-gray-500 text-sm">记录美好生活</p>
+        </div>
+        
+        <nav class="flex-1 p-4 space-y-1">
+            <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-3 rounded-lg {% if page == 'dashboard' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %} transition-colors">
+                <i class="fa fa-home w-5 h-5 mr-3"></i>
+                <span>仪表盘</span>
+            </a>
+            <a href="{% url 'location' %}" class="flex items-center px-4 py-3 rounded-lg {% if page == 'location' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %} transition-colors">
+                <i class="fa fa-map-marker w-5 h-5 mr-3"></i>
+                <span>地址管理</span>
+            </a>
+            <a href="{% url 'checkin' %}" class="flex items-center px-4 py-3 rounded-lg {% if page == 'checkin' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %} transition-colors">
+                <i class="fa fa-check-square-o w-5 h-5 mr-3"></i>
+                <span>每日打卡</span>
+            </a>
+            <a href="{% url 'activity' %}" class="flex items-center px-4 py-3 rounded-lg {% if page == 'activity' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %} transition-colors">
+                <i class="fa fa-calendar w-5 h-5 mr-3"></i>
+                <span>活动记录</span>
+            </a>
+            <a href="{% url 'profile' %}" class="flex items-center px-4 py-3 rounded-lg {% if page == 'profile' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %} transition-colors">
+                <i class="fa fa-user w-5 h-5 mr-3"></i>
+                <span>个人资料</span>
+            </a>
+        </nav>
+        
+        <div class="p-4 border-t">
+            <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                <i class="fa fa-sign-out w-5 h-5 mr-3"></i>
+                <span>退出登录</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 overflow-y-auto bg-gray-50">
+        <!-- 顶部导航 -->
+        <header class="bg-white shadow-sm p-4 flex justify-between items-center">
+            <button class="md:hidden text-gray-600" id="mobileMenuBtn">
+                <i class="fa fa-bars text-xl"></i>
+            </button>
+            <h2 class="text-xl font-semibold">
+                {% if page == 'dashboard' %}仪表盘{% elif page == 'location' %}地址管理{% elif page == 'checkin' %}每日打卡{% elif page == 'activity' %}活动记录{% elif page == 'profile' %}个人资料{% endif %}
+            </h2>
+            <div class="flex items-center">
+                <span class="text-gray-600 mr-2">欢迎，{{ user.username }}</span>
+                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i class="fa fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- 页面内容 -->
+        <div class="p-6">
+            {% if page == 'dashboard' %}
+                <!-- 仪表盘内容 -->
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold">欢迎回来，{{ user.username }}！</h3>
+                    <p class="text-gray-500">{{ today|date:"Y年m月d日" }} {{ today|date:"l" }}</p>
+                </div>
+
+                <!-- 状态卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h4 class="text-gray-500 mb-2">今日打卡状态</h4>
+                        <div class="flex items-center">
+                            <span class="text-2xl font-bold {% if checkin_status == '已完成' %}text-green-600{% else %}text-red-600{% endif %}">
+                                {{ checkin_status }}
+                            </span>
+                            <a href="{% url 'checkin' %}" class="ml-4 text-blue-600 hover:underline">
+                                {% if checkin_status == '已完成' %}查看详情{% else %}去打卡{% endif %}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h4 class="text-gray-500 mb-2">最近地址</h4>
+                        {% if recent_location %}
+                            <p class="text-2xl font-bold mb-2">{{ recent_location.name }}</p>
+                            <p class="text-gray-600 text-sm">{{ recent_location.address }}</p>
+                        {% else %}
+                            <p class="text-gray-500">还没有添加地址</p>
+                            <a href="{% url 'location' %}" class="text-blue-600 hover:underline">添加地址</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- 最近活动 -->
+                <div class="bg-white p-6 rounded-lg shadow-sm mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">最近活动</h3>
+                        <a href="{% url 'activity' %}" class="text-blue-600 hover:underline">查看全部</a>
+                    </div>
+                    
+                    {% if recent_activities %}
+                        <div class="space-y-4">
+                            {% for activity in recent_activities %}
+                            <div class="border-b pb-3">
+                                <h4 class="font-medium">{{ activity.title }}</h4>
+                                <p class="text-gray-500 text-sm">{{ activity.start_time|date:"Y-m-d H:i" }} - {{ activity.get_category_display }}</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-gray-500">还没有活动记录</p>
+                        <a href="{% url 'activity' %}" class="text-blue-600 hover:underline">添加活动</a>
+                    {% endif %}
+                </div>
+
+            {% elif page == 'location' %}
+                <!-- 地址管理内容 -->
+                <div class="mb-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold">地址管理</h3>
+                    <button onclick="document.getElementById('addLocationForm').classList.toggle('hidden')" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fa fa-plus mr-1"></i> 添加地址
+                    </button>
+                </div>
+
+                <!-- 添加地址表单 -->
+                <div id="addLocationForm" class="bg-white p-6 rounded-lg shadow-sm mb-6 hidden">
+                    <h4 class="text-lg font-semibold mb-4">添加新地址</h4>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">地点名称</label>
+                            <input type="text" name="name" required class="w-full px-4 py-2 border rounded-lg" placeholder="例如：家、公司">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">详细地址</label>
+                            <textarea name="address" required class="w-full px-4 py-2 border rounded-lg" placeholder="请输入详细地址"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">纬度（可选）</label>
+                                <input type="number" step="0.000001" name="latitude" class="w-full px-4 py-2 border rounded-lg" placeholder="例如：39.9042">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">经度（可选）</label>
+                                <input type="number" step="0.000001" name="longitude" class="w-full px-4 py-2 border rounded-lg" placeholder="例如：116.4074">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="is_default" class="form-checkbox text-blue-600">
+                                <span class="ml-2 text-sm text-gray-700">设为默认地址</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                            保存地址
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 地址列表 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    {% if locations %}
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">地址</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for location in locations %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ location.name }}</td>
+                                    <td class="px-6 py-4">{{ location.address }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% if location.is_default %}
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            默认地址
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="p-6 text-center">
+                            <p class="text-gray-500">还没有添加任何地址</p>
+                            <button onclick="document.getElementById('addLocationForm').classList.toggle('hidden')" class="mt-4 text-blue-600 hover:underline">
+                                点击添加第一个地址
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+
+            {% elif page == 'checkin' %}
+                <!-- 打卡内容 -->
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold">每日打卡</h3>
+                    <p class="text-gray-500">今天是 {{ today|date:"Y年m月d日" }}，记录你的足迹吧</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">打卡地点（可选）</label>
+                            <select name="location_id" class="w-full px-4 py-2 border rounded-lg">
+                                <option value="">请选择地点</option>
+                                {% for location in locations %}
+                                <option value="{{ location.id }}">{{ location.name }} - {{ location.address }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">打卡状态</label>
+                            <select name="status" class="w-full px-4 py-2 border rounded-lg">
+                                <option value="completed">已完成</option>
+                                <option value="late">迟到</option>
+                                <option value="absent">缺席</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">备注（可选）</label>
+                            <textarea name="notes" class="w-full px-4 py-2 border rounded-lg" rows="3" placeholder="添加一些备注信息..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                            完成打卡
+                        </button>
+                    </form>
+                </div>
+
+            {% elif page == 'activity' %}
+                <!-- 活动记录内容 -->
+                <div class="mb-6 flex justify-between items-center">
+                    <h3 class="text-xl font-bold">活动记录</h3>
+                    <button onclick="document.getElementById('addActivityForm').classList.toggle('hidden')" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fa fa-plus mr-1"></i> 添加活动
+                    </button>
+                </div>
+
+                <!-- 添加活动表单 -->
+                <div id="addActivityForm" class="bg-white p-6 rounded-lg shadow-sm mb-6 hidden">
+                    <h4 class="text-lg font-semibold mb-4">添加新活动</h4>
+                    <form method="post" class="space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">活动标题</label>
+                            <input type="text" name="title" required class="w-full px-4 py-2 border rounded-lg" placeholder="输入活动标题">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">活动类别</label>
+                            <select name="category" class="w-full px-4 py-2 border rounded-lg">
+                                <option value="work">工作</option>
+                                <option value="life">生活</option>
+                                <option value="travel">旅行</option>
+                                <option value="study">学习</option>
+                                <option value="other">其他</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">活动地点（可选）</label>
+                            <select name="location_id" class="w-full px-4 py-2 border rounded-lg">
+                                <option value="">请选择地点</option>
+                                {% for location in locations %}
+                                <option value="{{ location.id }}">{{ location.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">开始时间</label>
+                                <input type="datetime-local" name="start_time" required class="w-full px-4 py-2 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">结束时间</label>
+                                <input type="datetime-local" name="end_time" required class="w-full px-4 py-2 border rounded-lg">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">活动描述（可选）</label>
+                            <textarea name="description" class="w-full px-4 py-2 border rounded-lg" rows="3" placeholder="描述一下活动内容..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                            保存活动
+                        </button>
+                    </form>
+                </div>
+
+                <!-- 活动列表 -->
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    {% if activities %}
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">标题</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类别</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">时间</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for activity in activities %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ activity.title }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            {{ activity.get_category_display }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {{ activity.start_time|date:"Y-m-d H:i" }} - {{ activity.end_time|date:"H:i" }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="p-6 text-center">
+                            <p class="text-gray-500">还没有添加任何活动</p>
+                            <button onclick="document.getElementById('addActivityForm').classList.toggle('hidden')" class="mt-4 text-blue-600 hover:underline">
+                                点击添加第一个活动
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+
+<!-- 移动端菜单 -->
+<div id="mobileMenu" class="fixed inset-0 bg-black/50 z-50 hidden md:hidden">
+    <div class="bg-white h-full w-64 p-4 transform transition-transform">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-bold text-blue-600">菜单</h2>
+            <button id="closeMenuBtn" class="text-gray-500">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+        <nav class="space-y-1">
+            <a href="{% url 'dashboard' %}" class="block px-4 py-3 rounded-lg {% if page == 'dashboard' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %}">
+                <i class="fa fa-home mr-3"></i>仪表盘
+            </a>
+            <a href="{% url 'location' %}" class="block px-4 py-3 rounded-lg {% if page == 'location' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %}">
+                <i class="fa fa-map-marker mr-3"></i>地址管理
+            </a>
+            <a href="{% url 'checkin' %}" class="block px-4 py-3 rounded-lg {% if page == 'checkin' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %}">
+                <i class="fa fa-check-square-o mr-3"></i>每日打卡
+            </a>
+            <a href="{% url 'activity' %}" class="block px-4 py-3 rounded-lg {% if page == 'activity' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %}">
+                <i class="fa fa-calendar mr-3"></i>活动记录
+            </a>
+            <a href="{% url 'profile' %}" class="block px-4 py-3 rounded-lg {% if page == 'profile' %}bg-blue-50 text-blue-600{% else %}hover:bg-gray-100{% endif %}">
+                <i class="fa fa-user mr-3"></i>个人资料
+            </a>
+            <a href="{% url 'logout' %}" class="block px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 mt-6">
+                <i class="fa fa-sign-out mr-3"></i>退出登录
+            </a>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 移动端菜单控制
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuBtn && closeMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.remove('hidden');
+            });
+            
+            closeMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.add('hidden');
+            });
+            
+            mobileMenu.addEventListener('click', function(e) {
+                if (e.target === mobileMenu) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

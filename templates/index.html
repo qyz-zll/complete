@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- 登录页面 -->
+    {% if page == 'login' %}
+    <div class="auth-container login-bg">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>欢迎回来</h2>
+                <p>请登录账号继续使用</p>
+            </div>
+            
+            <form method="POST" action="{% url 'login' %}" class="auth-form" id="loginForm">
+                {% csrf_token %}
+                
+                <!-- 用户名输入 -->
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required
+                           class="form-control" placeholder="请输入用户名">
+                    <i class="fa fa-user form-icon"></i>
+                    <p class="error-message username-error">请输入用户名</p>
+                </div>
+                
+                <!-- 密码输入 -->
+                <div class="form-group">
+                    <div class="flex justify-between">
+                        <label for="password">密码</label>
+                        <a href="#" class="text-sm text-blue-400 hover:underline">忘记密码?</a>
+                    </div>
+                    <input type="password" id="password" name="password" required
+                           class="form-control" placeholder="请输入密码">
+                    <i class="fa fa-lock form-icon"></i>
+                    <button type="button" id="togglePassword" class="toggle-password">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                    <p class="error-message password-error">请输入密码</p>
+                </div>
+                
+                <!-- 记住我 -->
+                <div class="remember-me">
+                    <input id="remember-me" name="remember-me" type="checkbox">
+                    <label for="remember-me">记住我的登录状态</label>
+                </div>
+                
+                <!-- 登录按钮 -->
+                <button type="submit" class="auth-btn">
+                    <i class="fa fa-sign-in"></i> 登录账号
+                </button>
+            </form>
+            
+            <!-- 分隔线 -->
+            <div class="divider">
+                <span>或使用以下方式登录</span>
+            </div>
+            
+            <!-- 社交登录 -->
+            <div class="social-login px-6 pb-6">
+                <button class="social-btn wechat">
+                    <i class="fa fa-weixin"></i> 微信登录
+                </button>
+                <button class="social-btn qq">
+                    <i class="fa fa-qq"></i> QQ登录
+                </button>
+            </div>
+            
+            <!-- 注册提示 -->
+            <div class="auth-footer">
+                <p>还没有账号? 
+                    <a href="{% url 'register' %}">立即注册</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 注册页面 -->
+    {% elif page == 'register' %}
+    <div class="auth-container register-bg">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>创建新账号</h2>
+                <p>加入我们，开启全新体验</p>
+            </div>
+            
+            <form method="POST" action="{% url 'register' %}" class="auth-form" id="registerForm">
+                {% csrf_token %}
+                
+                <!-- 用户名输入 -->
+                <div class="form-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" required
+                           class="form-control" placeholder="3-12位字符，可包含字母和数字">
+                    <i class="fa fa-user form-icon"></i>
+                    <p class="error-message username-error">用户名格式不正确</p>
+                </div>
+                
+                <!-- 邮箱输入 -->
+                <div class="form-group">
+                    <label for="email">邮箱</label>
+                    <input type="email" id="email" name="email" required
+                           class="form-control" placeholder="请输入有效的邮箱地址">
+                    <i class="fa fa-envelope form-icon"></i>
+                    <p class="error-message email-error">请输入有效的邮箱地址</p>
+                </div>
+                
+                <!-- 密码输入 -->
+                <div class="form-group">
+                    <label for="password1">密码</label>
+                    <input type="password" id="password1" name="password1" required
+                           class="form-control" placeholder="6-16位字符，建议包含字母和数字">
+                    <i class="fa fa-lock form-icon"></i>
+                    <button type="button" id="togglePassword1" class="toggle-password">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                    <div class="help-text">
+                        <i class="fa fa-info-circle"></i>
+                        <span>密码长度需在6-16位之间</span>
+                    </div>
+                    <p class="error-message password1-error">密码不符合要求</p>
+                </div>
+                
+                <!-- 确认密码输入 -->
+                <div class="form-group">
+                    <label for="password2">确认密码</label>
+                    <input type="password" id="password2" name="password2" required
+                           class="form-control" placeholder="请再次输入密码">
+                    <i class="fa fa-lock form-icon"></i>
+                    <button type="button" id="togglePassword2" class="toggle-password">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                    <p class="error-message password2-error">两次输入的密码不一致</p>
+                </div>
+                
+                <!-- 注册按钮 -->
+                <button type="submit" class="auth-btn">
+                    <i class="fa fa-user-plus"></i> 创建账号
+                </button>
+                
+                <!-- 注册协议 -->
+                <p class="text-xs text-gray-400 text-center mt-2">
+                    点击"创建账号"，即表示您同意我们的
+                    <a href="#" class="text-blue-400 hover:underline">服务条款</a>
+                    和
+                    <a href="#" class="text-blue-400 hover:underline">隐私政策</a>
+                </p>
+            </form>
+            
+            <!-- 登录提示 -->
+            <div class="auth-footer">
+                <p>已有账号? 
+                    <a href="{% url 'login' %}">立即登录</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/auth.js' %}"></script>
+{% endblock %}
