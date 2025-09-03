@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+import static
+import staticfiles
 
 # 项目根目录
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,6 +11,7 @@ SECRET_KEY = 'django-insecure-example-key-for-development-only'
 
 # 开发模式
 DEBUG = True
+print(f"当前DEBUG值：{DEBUG}")
 
 # 允许访问的主机
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -27,9 +30,11 @@ INSTALLED_APPS = [
 
 # 中间件配置
 MIDDLEWARE = [
+    # 'dear_trail.middleware.StaticFileCharsetMiddleware'
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    # 'django.contrib.staticfiles.middleware.StaticFilesMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -88,9 +93,12 @@ USE_TZ = True
 
 # 静态文件配置
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # 假设你的CSS文件在项目根目录的"static/css/"下
+    # 若静态文件在其他目录（如app内的static），无需额外添加，Django会自动检索app内的static目录
+]
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # 媒体文件配置（用户上传的文件）
 MEDIA_URL = './media/'
 MEDIA_ROOT = BASE_DIR / 'templates/media'

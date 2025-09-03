@@ -1,65 +1,218 @@
-{% extends 'base.html' %}
-{% load static %}  <!-- 必须加载static标签才能正确引用静态文件 -->
 
+{% extends 'base.html' %}
+{% load static %}
+
+<meta charset="UTF-8">
+<base href="/">
 {% block title %}
     {% if page == 'login' %}登录{% else %}注册{% endif %}
 {% endblock %}
 
-{% block extra_css %}
-    <!-- 关键：在此处引入CSS文件，确保路径正确 -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/auth.css' %}">
-{% endblock %}
-
 {% block content %}
+    <style>
+        /* 完整CSS样式 - 直接嵌入HTML */
+        .auth-page {
+            min-height: 100vh !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 20px !important;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+            margin: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .auth-card {
+            width: 100% !important;
+            max-width: 420px !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 16px !important;
+            padding: 30px !important;
+            color: white !important;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2) !important;
+        }
+
+        .auth-card h1 {
+            color: #ffffff !important;
+            font-size: 26px !important;
+            margin-bottom: 20px !important;
+            text-align: center !important;
+        }
+
+        .auth-form {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 15px !important;
+        }
+
+        .form-group {
+            margin-bottom: 10px !important;
+            position: relative !important;
+        }
+
+        .form-control {
+            width: 100% !important;
+            padding: 14px 14px 14px 45px !important;
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid #4a90e2 !important;
+            border-radius: 8px !important;
+            color: white !important;
+            font-size: 16px !important;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .form-control:focus {
+            outline: none !important;
+            border-color: #6ba5e7 !important;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3) !important;
+        }
+
+        .form-icon {
+            position: absolute !important;
+            left: 15px !important;
+            top: 38px !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+        }
+
+        .toggle-password {
+            position: absolute !important;
+            right: 15px !important;
+            top: 38px !important;
+            color: rgba(255, 255, 255, 0.5) !important;
+            background: transparent !important;
+            border: none !important;
+            cursor: pointer !important;
+        }
+
+        .auth-btn {
+            width: 100% !important;
+            padding: 14px !important;
+            background: #4a90e2 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            color: white !important;
+            font-size: 16px !important;
+            cursor: pointer !important;
+            transition: background 0.3s ease !important;
+        }
+
+        .auth-btn:hover {
+            background: #5c6bc0 !important;
+        }
+
+        .error-message {
+            color: #ff4d4f !important;
+            font-size: 13px !important;
+            margin-top: 5px !important;
+            display: none !important;
+        }
+
+        .error-message.show {
+            display: block !important;
+        }
+
+        .auth-switch {
+            text-align: center !important;
+            margin-top: 20px !important;
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        .auth-switch a {
+            color: #4a90e2 !important;
+            text-decoration: none !important;
+            font-weight: 500 !important;
+        }
+
+        .remember-me {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 14px !important;
+        }
+
+        .remember-me input {
+            accent-color: #4a90e2 !important;
+        }
+    </style>
+
     <div class="auth-page">
         <div class="auth-card">
             {% if page == 'login' %}
-                <!-- 登录表单内容 -->
-                <div class="auth-header">
-                    <h1>账号登录</h1>
-                    <p>请输入账号信息登录</p>
-                </div>
+                <h1>登录</h1>
                 <form method="POST" action="{% url 'login' %}" class="auth-form" id="loginForm">
                     {% csrf_token %}
-                    <!-- 登录表单字段 -->
+
                     <div class="form-group">
-                        <label for="username">用户名</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="请输入用户名">
+                        <input type="text" id="username" name="username" class="form-control" placeholder="用户名">
                         <i class="fa fa-user form-icon"></i>
                         <p class="error-message username-error">请输入用户名</p>
                     </div>
+
                     <div class="form-group">
-                        <label for="password">密码</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="请输入密码">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="密码">
                         <i class="fa fa-lock form-icon"></i>
                         <button type="button" id="togglePassword" class="toggle-password">
                             <i class="fa fa-eye-slash"></i>
                         </button>
                         <p class="error-message password-error">请输入密码</p>
                     </div>
+
+                    <div class="remember-me">
+                        <input id="remember-me" name="remember-me" type="checkbox">
+                        <label for="remember-me">记住登录状态</label>
+                    </div>
+
                     <button type="submit" class="auth-btn">登录</button>
-                    <div class="auth-footer">
-                        <p>还没有账号? <a href="{% url 'register' %}">立即注册</a></p>
+
+                    <div class="auth-switch">
+                        还没有账号? <a href="{% url 'register' %}">立即注册</a>
                     </div>
                 </form>
             {% else %}
-                <!-- 注册表单内容 -->
-                <div class="auth-header">
-                    <h1>创建账号</h1>
-                    <p>填写信息完成注册</p>
-                </div>
+                <h1>注册</h1>
                 <form method="POST" action="{% url 'register' %}" class="auth-form" id="registerForm">
                     {% csrf_token %}
-                    <!-- 注册表单字段 -->
+
                     <div class="form-group">
-                        <label for="username">用户名</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="3-12位字符">
+                        <input type="text" id="username" name="username" class="form-control" placeholder="用户名（3-12位）">
                         <i class="fa fa-user form-icon"></i>
+                        <p class="error-message username-error">用户名格式不正确</p>
                     </div>
-                    <!-- 其他注册字段... -->
+
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" class="form-control" placeholder="邮箱地址">
+                        <i class="fa fa-envelope form-icon"></i>
+                        <p class="error-message email-error">请输入有效的邮箱</p>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" id="password1" name="password1" class="form-control" placeholder="密码（6-16位）">
+                        <i class="fa fa-lock form-icon"></i>
+                        <button type="button" id="togglePassword1" class="toggle-password">
+                            <i class="fa fa-eye-slash"></i>
+                        </button>
+                        <p class="error-message password1-error">密码不符合要求</p>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" id="password2" name="password2" class="form-control" placeholder="确认密码">
+                        <i class="fa fa-lock form-icon"></i>
+                        <button type="button" id="togglePassword2" class="toggle-password">
+                            <i class="fa fa-eye-slash"></i>
+                        </button>
+                        <p class="error-message password2-error">两次密码不一致</p>
+                    </div>
+
                     <button type="submit" class="auth-btn">注册</button>
-                    <div class="auth-footer">
-                        <p>已有账号? <a href="{% url 'login' %}">立即登录</a></p>
+
+                    <div class="auth-switch">
+                        已有账号? <a href="{% url 'login' %}">立即登录</a>
                     </div>
                 </form>
             {% endif %}
@@ -68,5 +221,171 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'js/auth.js' %}"></script>
+    <script>
+        // 登录注册表单交互逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('loginForm')) {
+                initLoginForm();
+            }
+
+            if (document.getElementById('registerForm')) {
+                initRegisterForm();
+            }
+        });
+
+        // 初始化登录表单
+        function initLoginForm() {
+            const form = document.getElementById('loginForm');
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            const usernameError = document.querySelector('.username-error');
+            const passwordError = document.querySelector('.password-error');
+            const togglePassword = document.getElementById('togglePassword');
+
+            // 密码显示切换
+            togglePassword.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                togglePasswordVisibility(password, icon);
+            });
+
+            // 表单提交验证
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                if (!username.value.trim()) {
+                    showError(username, usernameError);
+                    isValid = false;
+                } else {
+                    hideError(username, usernameError);
+                }
+
+                if (!password.value.trim()) {
+                    showError(password, passwordError);
+                    isValid = false;
+                } else {
+                    hideError(password, passwordError);
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    form.classList.add('animate-shake');
+                    setTimeout(() => form.classList.remove('animate-shake'), 500);
+                }
+            });
+        }
+
+        // 初始化注册表单
+        function initRegisterForm() {
+            const form = document.getElementById('registerForm');
+            const username = document.getElementById('username');
+            const email = document.getElementById('email');
+            const password1 = document.getElementById('password1');
+            const password2 = document.getElementById('password2');
+            const usernameError = document.querySelector('.username-error');
+            const emailError = document.querySelector('.email-error');
+            const password1Error = document.querySelector('.password1-error');
+            const password2Error = document.querySelector('.password2-error');
+
+            // 密码显示切换
+            document.getElementById('togglePassword1').addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                togglePasswordVisibility(password1, icon);
+            });
+
+            document.getElementById('togglePassword2').addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                togglePasswordVisibility(password2, icon);
+            });
+
+            // 实时验证
+            username.addEventListener('input', () => validateUsername(username, usernameError));
+            email.addEventListener('input', () => validateEmail(email, emailError));
+            password1.addEventListener('input', function() {
+                validatePassword(password1, password1Error);
+                validatePasswordMatch(password1, password2, password2Error);
+            });
+            password2.addEventListener('input', () => validatePasswordMatch(password1, password2, password2Error));
+
+            // 表单提交验证
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+
+                if (!validateUsername(username, usernameError)) isValid = false;
+                if (!validateEmail(email, emailError)) isValid = false;
+                if (!validatePassword(password1, password1Error)) isValid = false;
+                if (!validatePasswordMatch(password1, password2, password2Error)) isValid = false;
+
+                if (!isValid) {
+                    e.preventDefault();
+                    form.classList.add('animate-shake');
+                    setTimeout(() => form.classList.remove('animate-shake'), 500);
+                }
+            });
+        }
+
+        // 密码显示切换
+        function togglePasswordVisibility(input, icon) {
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        }
+
+        // 验证用户名
+        function validateUsername(input, errorElement) {
+            if (input.value.length < 3 || input.value.length > 12) {
+                showError(input, errorElement);
+                return false;
+            } else {
+                hideError(input, errorElement);
+                return true;
+            }
+        }
+
+        // 验证邮箱
+        function validateEmail(input, errorElement) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!regex.test(input.value)) {
+                showError(input, errorElement);
+                return false;
+            } else {
+                hideError(input, errorElement);
+                return true;
+            }
+        }
+
+        // 验证密码
+        function validatePassword(input, errorElement) {
+            if (input.value.length < 6 || input.value.length > 16) {
+                showError(input, errorElement);
+                return false;
+            } else {
+                hideError(input, errorElement);
+                return true;
+            }
+        }
+
+        // 验证密码匹配
+        function validatePasswordMatch(password, confirm, errorElement) {
+            if (password.value !== confirm.value) {
+                showError(confirm, errorElement);
+                return false;
+            } else {
+                hideError(confirm, errorElement);
+                return true;
+            }
+        }
+
+        // 显示错误
+        function showError(input, errorElement) {
+            input.classList.add('border-red');
+            errorElement.classList.add('show');
+        }
+
+        // 隐藏错误
+        function hideError(input, errorElement) {
+            input.classList.remove('border-red');
+            errorElement.classList.remove('show');
+        }
+    </script>
 {% endblock %}

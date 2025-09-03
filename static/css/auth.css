@@ -5,6 +5,80 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
+/* 1. 最顶级选择器 + !important 确保根容器样式 */
+html body [class="auth-page"] {
+    min-height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 20px !important;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+}
+
+/* 2. 卡片样式 - 使用多重选择器增强优先级 */
+.auth-page > div[class="auth-card"] {
+    width: 100% !important;
+    max-width: 420px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+    overflow: hidden !important;
+    z-index: 10 !important;
+}
+
+/* 3. 标题样式 - 强制文字颜色 */
+.auth-card [class="auth-header"] h1 {
+    color: #ffffff !important;
+    font-size: 26px !important;
+    margin-bottom: 8px !important;
+    text-align: center !important;
+}
+
+/* 4. 表单组 - 强制布局 */
+.auth-card [class="auth-form"] > [class="form-group"] {
+    margin-bottom: 20px !important;
+    position: relative !important;
+}
+
+/* 5. 输入框 - 强制所有关键样式 */
+.form-group > input[class="form-control"] {
+    width: 100% !important;
+    padding: 14px 15px 14px 45px !important;
+    background: rgba(255, 255, 255, 0.07) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+}
+
+/* 6. 按钮 - 确保背景和文字样式 */
+.auth-form > button[class="auth-btn"] {
+    width: 100% !important;
+    padding: 14px !important;
+    background: linear-gradient(90deg, #4a90e2 0%, #5c6bc0 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #ffffff !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+}
+
+/* 7. 覆盖所有可能的冲突样式 */
+* {
+    box-sizing: border-box !important;
+}
+
+/* 8. 确保没有继承样式干扰 */
+.auth-page, .auth-page * {
+    font-family: 'Segoe UI', sans-serif !important;
+    text-decoration: none !important;
+    list-style: none !important;
+}
 
 /* 动画定义 */
 @keyframes shake {
@@ -31,22 +105,22 @@
 
 /* 背景样式 */
 .login-bg {
-    background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+    background: linear-gradient(135deg, #1a237e 0%, #283593 100%) !important;
 }
 
 .register-bg {
-    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%);
+    background: linear-gradient(135deg, #388e3c 0%, #2e7d32 100%) !important;
 }
 
 /* 背景装饰 */
 .auth-container::before,
 .auth-container::after {
-    content: '';
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.3;
-    animation: float 8s ease-in-out infinite;
+    content: '' !important;
+    position: absolute !important;
+    border-radius: 50% !important;
+    filter: blur(100px) !important;
+    opacity: 0.3 !important;
+    animation: float 8s ease-in-out infinite !important;
 }
 
 .login-bg::before {
@@ -69,7 +143,7 @@
 .register-bg::before {
     width: 600px;
     height: 600px;
-    background: #81c784;
+    background: #81c784 !important;
     top: -300px;
     left: -100px;
 }
@@ -270,8 +344,8 @@
 }
 
 .auth-footer a:hover {
-    color: #90caf9;
-    text-decoration: underline;
+    color: #90caf9 !important;
+    text-decoration: underline  !important;
 }
 
 /* 分隔线 */
